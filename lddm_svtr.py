@@ -32,10 +32,10 @@ def create_cluster(project_id, region, cluster_name):
 
 
     clean_data(project_id, region, cluster_name)
-    run_pig_job(region, cluster_name)
-    srun_spark_job(region, cluster_name)
-    #write_table_to_txt(pig, spark)
-
+    pig = run_pig_job(region, cluster_name)
+    spark = run_spark_job(region, cluster_name)
+    write_table_to_txt(pig, spark)
+    
 
     # Delete the cluster once the job has terminated.
     operation = cluster_client.delete_cluster(
@@ -55,7 +55,6 @@ def clean_data(project_id, region, cluster_name):
     ## copy spark code
     command = "gsutil cp dataproc.py gs://lsdm_data_svtr/"
     subprocess.run ( [command] , shell=True ) 
-
 
     ## copy spark code
     command = "gsutil cp pagerank.py gs://lsdm_data_svtr/"
@@ -92,7 +91,7 @@ def run_spark_job(region, cluster_name):
 
 def write_table_to_txt(pig, spark):
     # Ouvrir le fichier en mode écriture
-    with open(data.txt, 'w') as file:
+    with open('result_data.txt', 'w') as file:
         # Écrire l'en-tête du tableau
         file.write("Pig\tSpark\tNode\n")
         file.write(str(pig) + '\t' + str(spark) + '\t' + str(2))
