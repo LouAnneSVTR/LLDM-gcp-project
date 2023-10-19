@@ -17,6 +17,7 @@ def create_cluster(project_id, region, cluster_name):
         "project_id": project_id,
         "cluster_name": cluster_name,
         "config": {
+            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-4"},
             "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-4"},
         },
     }
@@ -31,9 +32,9 @@ def create_cluster(project_id, region, cluster_name):
 
 
     clean_data(project_id, region, cluster_name)
-    #run_pig_job(region, cluster_name)
-    run_spark_job(region, cluster_name)
-
+    run_pig_job(region, cluster_name)
+    srun_spark_job(region, cluster_name)
+    #write_table_to_txt(pig, spark)
 
 
     # Delete the cluster once the job has terminated.
@@ -51,21 +52,18 @@ def create_cluster(project_id, region, cluster_name):
 
 
 def clean_data(project_id, region, cluster_name):
-    ## copy data
-    command = "gsutil cp small_page_links.nt gs://myown_bucket/"
+    ## copy spark code
+    command = "gsutil cp dataproc.py gs://lsdm_data_svtr/"
     subprocess.run ( [command] , shell=True ) 
-    #os.system("gsutil cp small_page_links.nt gs://myown_bucket/")
 
-    ## copy pig code
-    command = "gsutil cp pagerank-notype.py gs://myown_bucket/"
+
+    ## copy spark code
+    command = "gsutil cp pagerank.py gs://lsdm_data_svtr/"
     subprocess.run ( [command] , shell=True ) 
-    #os.system("gsutil cp pagerank-notype.py gs://myown_bucket/")
 
     ## Clean out directory
-    command = "gsutil rm -rf gs://myown_bucket/out"
+    command = "gsutil rm -rf gs://lsdm_data_svtr/out"
     subprocess.run ( [command] , shell=True ) 
-    #os.system("gsutil rm -rf gs://myown_bucket/out")
-
 
 
 def run_pig_job(region, cluster_name):
@@ -75,36 +73,45 @@ def run_pig_job(region, cluster_name):
     subprocess.run ( [command] , shell=True )
     end = time.time()
 
-    timer = start - end
+    print(f"Job Pig finished successfully with time : {end - start}")
 
-    print(f"Job finished successfully: ")
+    return end - start
 
 
 def run_spark_job(region, cluster_name):
-    command = "gcloud dataproc jobs submit pig --region {region} --cluster {cluster_name} -f gs://lsdm_data_svtr/pagerank.py"
+    command = f"gcloud dataproc jobs submit pyspark --region {region} --cluster {cluster_name} gs://lsdm_data_svtr/pagerank.py  -- gs://public_lddm_data/small_page_links.nt 3"
 
     start = time.time()
     subprocess.run ( [command] , shell=True )
     end = time.time()
 
-    timer = start - end
+    print(f"Job Spark finished successfully with time : {end - start}")
 
-    print(f"Job finished successfully: ")
+    return end - start
 
 
-
-#def collect_data(project_id, region, cluster_name):
+def write_table_to_txt(pig, spark):
+    # Ouvrir le fichier en mode écriture
+    with open(data.txt, 'w') as file:
+        # Écrire l'en-tête du tableau
+        file.write("Pig\tSpark\tNode\n")
+        file.write(str(pig) + '\t' + str(spark) + '\t' + str(2))
 
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 4:
-        project_id = "lsdm-40181"
-        region = "europe-central2"
+        project_id   = "lsdm-40181"
+        region       = "europe-central2"
         cluster_name = "clusterlsdm"
     else:
-        project_id = sys.argv[1]
-        region = sys.argv[2]
+        project_id   = sys.argv[1]
+        region       = sys.argv[2]
         cluster_name = sys.argv[3]
 
     create_cluster(project_id, region, cluster_name)
+
+    #node = [2,4,6]
+    #for n in node: 
+        #create_cluster(project_id, region, cluster_name, n)    
+    
