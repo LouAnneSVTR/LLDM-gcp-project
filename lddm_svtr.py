@@ -1,6 +1,8 @@
 #This fil aims to create n cluster with a given node in python
 
+import subprocess
 import sys
+import time
 import google.cloud.dataproc_v1
 from google.cloud import dataproc_v1 as dataproc
 
@@ -27,6 +29,13 @@ def create_cluster(project_id, region, cluster_name):
 
     print(f"Cluster created successfully: {result.cluster_name}")
 
+
+    clean_data(project_id, region, cluster_name)
+    #run_pig_job(region, cluster_name)
+    run_spark_job(region, cluster_name)
+
+
+
     # Delete the cluster once the job has terminated.
     operation = cluster_client.delete_cluster(
         request={
@@ -41,25 +50,45 @@ def create_cluster(project_id, region, cluster_name):
 
 
 
-#def clean_data(project_id, region, cluster_name):
+def clean_data(project_id, region, cluster_name):
     ## copy data
+    command = "gsutil cp small_page_links.nt gs://myown_bucket/"
+    subprocess.run ( [command] , shell=True ) 
     #os.system("gsutil cp small_page_links.nt gs://myown_bucket/")
+
     ## copy pig code
+    command = "gsutil cp pagerank-notype.py gs://myown_bucket/"
+    subprocess.run ( [command] , shell=True ) 
     #os.system("gsutil cp pagerank-notype.py gs://myown_bucket/")
+
     ## Clean out directory
+    command = "gsutil rm -rf gs://myown_bucket/out"
+    subprocess.run ( [command] , shell=True ) 
     #os.system("gsutil rm -rf gs://myown_bucket/out")
 
 
 
-def run_pig_job(project_id, region, cluster_name):
+def run_pig_job(region, cluster_name):
+    command = f"gcloud dataproc jobs submit pig --region {region} --cluster {cluster_name} -f gs://lsdm_data_svtr/dataproc.py"
+    
+    start = time.time()
+    subprocess.run ( [command] , shell=True )
+    end = time.time()
 
-    #os.system("gcloud dataproc jobs submit pig --region europe-west1 --cluster cluster-a35a -f gs://lsdm_data_svtr/dataproc.py")
+    timer = start - end
+
     print(f"Job finished successfully: ")
 
 
-def run_spark_job(project_id, region, cluster_name):
+def run_spark_job(region, cluster_name):
+    command = "gcloud dataproc jobs submit pig --region {region} --cluster {cluster_name} -f gs://lsdm_data_svtr/pagerank.py"
 
-    #os.system("gcloud dataproc jobs submit pig --region europe-west1 --cluster cluster-a35a -f gs://lsdm_data_svtr/dataproc.py")
+    start = time.time()
+    subprocess.run ( [command] , shell=True )
+    end = time.time()
+
+    timer = start - end
+
     print(f"Job finished successfully: ")
 
 
@@ -79,7 +108,3 @@ if __name__ == "__main__":
         cluster_name = sys.argv[3]
 
     create_cluster(project_id, region, cluster_name)
-
-#lsdm-401811 europe-central2 test
-# how to run PySpark job
-#https://www.freecodecamp.org/news/what-is-google-dataproc/
