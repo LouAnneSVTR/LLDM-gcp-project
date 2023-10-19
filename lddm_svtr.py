@@ -28,9 +28,8 @@ def create_cluster(project_id, region, cluster_name):
 
     print(f"Cluster created successfully: {result.cluster_name}")
 
-
-
-    # Create the job client.
+    ############# JOB #############    
+    # Create the job client for Pig
     job_client = dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
@@ -38,7 +37,7 @@ def create_cluster(project_id, region, cluster_name):
     # Create the job config.
     job = {
         "placement": {"cluster_name": cluster_name},
-        "pyspark_job": {"main_python_file_uri": f"gs://lsdm_data_svtr/dataproc.py"},
+        "pig_job": {"main_python_file_uri": f"gs://lsdm_data_svtr/dataproc.py"},
     }
 
     operation = job_client.submit_job_as_operation(
@@ -46,7 +45,9 @@ def create_cluster(project_id, region, cluster_name):
     )
     #response = operation.result()
 
-    print(f"Job finished successfully: ")
+    print(f"Pig Job finished successfully: ")
+    ############# JOB #############
+    
 
     #gsutil rm -rf gs://lsdm_data_svtr/out
     #gcloud dataproc jobs submit pig --region europe-west1 --cluster cluster-a35a -f gs://lsdm_data_svtr/dataproc.py
@@ -71,11 +72,8 @@ if __name__ == "__main__":
         sys.exit("python create_cluster.py project_id region cluster_name")
 
     project_id = sys.argv[1]
-    print(project_id)
     region = sys.argv[2]
-    print(region)
     cluster_name = sys.argv[3]
-    print(cluster_name)
 
     create_cluster(project_id, region, cluster_name)
 
