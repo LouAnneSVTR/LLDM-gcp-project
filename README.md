@@ -54,7 +54,7 @@ Afin d'évaluer les performances entre les implémentations Pig et PySpark, nous
 **Nombre de Nœuds** : Selon la consigne, ous avons utilisé 2, 4 et 6 nœuds en fonction des restrictions de quota et des besoins en puissance de calcul pour exécuter les algorithmes.
 
 **Données d'Entrée** : Nous avons préchargé le jeu de données *"lddm_data/small_page_links.nt 3*" dans le bucket public *"gs://public_lddm_data/small_page_links.nt 3"* au sein de l'impémentation Pig et dasn la commande de lancement de PySpark.
-Les données d'entrées finales sont ????????????????????
+Les données d'entrées finales sont **A COMPLETER**
 
 **Licences** : http://www.apache.org/licenses/LICENSE-2.0 pour PySpark.
 
@@ -139,12 +139,21 @@ Efficacité : Pig, en revanche, est notablement plus lent avec un temps d'exécu
 
 ## 4. Observation
 
-**A COMPLETER + FAIRE GRAPHIQUE **
+##### **A COMPLETER + FAIRE GRAPHIQUE**
 
 
 
 ## Conclusion finale 
 
-**A COMPLETER**
+##### **A COMPLETER**
 
 Cette comparaison met en évidence la capacité de PySpark à traiter rapidement des tâches de traitement de données complexes, ce qui en fait un choix privilégié pour les environnements nécessitant des performances élevées. Pig, bien que fonctionnel, est moins performant en termes de vitesse d'exécution. Le choix entre les deux technologies doit être basé sur les besoins spécifiques de chaque projet et sur la balance entre la simplicité d'utilisation de Pig et la vitesse de PySpark.
+
+
+
+
+## Documentation
+
+[Gestion de cluster en Python](https://cloud.google.com/dataproc/docs/tutorials/python-library-example?hl=fr)
+
+
