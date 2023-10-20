@@ -6,7 +6,7 @@ import time
 import google.cloud.dataproc_v1
 from google.cloud import dataproc_v1 as dataproc
 
-def create_cluster(project_id, region, cluster_name):
+def create_cluster(project_id, region, cluster_name, node):
     # Create the cluster client.
     cluster_client = dataproc.ClusterControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
@@ -18,7 +18,7 @@ def create_cluster(project_id, region, cluster_name):
         "cluster_name": cluster_name,
         "config": {
             "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-4"},
-            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-4"},
+            "worker_config": {"num_instances": node, "machine_type_uri": "n1-standard-4"},
         },
     }
 
@@ -34,7 +34,7 @@ def create_cluster(project_id, region, cluster_name):
     clean_data(project_id, region, cluster_name)
     pig = run_pig_job(region, cluster_name)
     spark = run_spark_job(region, cluster_name)
-    write_table_to_txt(pig, spark)
+    write_table_to_txt(pig, spark, node)
     
 
     # Delete the cluster once the job has terminated.
@@ -89,12 +89,12 @@ def run_spark_job(region, cluster_name):
     return end - start
 
 
-def write_table_to_txt(pig, spark):
+def write_table_to_txt(pig, spark, node):
     # Ouvrir le fichier en mode écriture
     with open('result_data.txt', 'w') as file:
         # Écrire l'en-tête du tableau
         file.write("Pig\tSpark\tNode\n")
-        file.write(str(pig) + '\t' + str(spark) + '\t' + str(2))
+        file.write(str(pig) + '\t' + str(spark) + '\t' + str(node))
 
 
 
@@ -108,9 +108,7 @@ if __name__ == "__main__":
         region       = sys.argv[2]
         cluster_name = sys.argv[3]
 
-    create_cluster(project_id, region, cluster_name)
-
-    #node = [2,4,6]
-    #for n in node: 
-        #create_cluster(project_id, region, cluster_name, n)    
+    node = [2,4,6]
+    for n in node: 
+        create_cluster(project_id, region, cluster_name, n)    
     
