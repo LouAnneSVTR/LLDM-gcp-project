@@ -91,25 +91,60 @@ Les configurations de bases étant fixées à 2, 4 et 5 noeud avec *lddm_data/sm
 | `` |4 | |
 |  `` |6 | |
 
-Entête trouvée dans les fichiers ?????? ::
 
 Comparaison préliminaire : 
 
-On oberservaisement une différence notable de temps d'execution entre Pig et Spark : 
+On observe aisement une différence notable de temps d'execution entre Pig et Spark. 
+En effet, prenons par exemple deux noeuds, PySpark est 80% fois plus rapide que Pig. 
+
+On s'attend ainsi, pour le fichier de 800mo à constater une différence bien supérieurs entre PySpark et Pig.
+
+
+## 2. Tests finaux
+
+Nous avons testés avec le fichier ???? 
+
+| Pig | Nombre de noeuds      | En-tête
+| :-------- | :------------------------- | :------- |
+| **A COMPLETER** |2 |**A COMPLETER** |
+| **A COMPLETER** | 4 | |
+| **A COMPLETER** | 6 | |
+
+| Spark     | Nombre de noeuds      | En-tête
+| :------- | :------------------------- | :------- |
+| **A COMPLETER** |2 |**A COMPLETER** |
+| **A COMPLETER** |4 | |
+|  **A COMPLETER** |6 | |
+
+
+Comparaison finale : 
+
+On observe aisement une différence notable de temps d'execution entre Pig et Spark : 
+
 
 PySpark :
 
-Temps d'exécution : 38.01 secondes
-Rapidité : PySpark démontre une efficacité impressionnante en accomplissant la tâche en seulement 38.01 secondes. Sa capacité à traiter les données à grande vitesse en fait un choix puissant pour des charges de travail de traitement de données massives.
+Temps d'exécution pour deux noeuds : **A COMPLETER**
+
+Rapidité : PySpark démontre une grande efficacité à traiter les données à grande vitesse. Cela en fait un choix puissant pour des charges de travail de traitement de données massives.
+
 
 Pig :
 
-Temps d'exécution : 191.12 secondes
+Temps d'exécution : **A COMPLETER**
+
 Efficacité : Pig, en revanche, est notablement plus lent avec un temps d'exécution de 191.12 secondes. Ses performances sont plus modestes par rapport à PySpark, ce qui peut être un facteur important à prendre en compte pour des tâches nécessitant des performances élevées.
 
 
 
-On s'attend ainsi, pour le fichier de 800mo a constater une différence bien supérieurs entre PySpark et Pig.
+## 4. Observation
+
+**A COMPLETER + FAIRE GRAPHIQUE **
+
+
 
 ## Conclusion finale 
+
+**A COMPLETER**
+
 Cette comparaison met en évidence la capacité de PySpark à traiter rapidement des tâches de traitement de données complexes, ce qui en fait un choix privilégié pour les environnements nécessitant des performances élevées. Pig, bien que fonctionnel, est moins performant en termes de vitesse d'exécution. Le choix entre les deux technologies doit être basé sur les besoins spécifiques de chaque projet et sur la balance entre la simplicité d'utilisation de Pig et la vitesse de PySpark.
